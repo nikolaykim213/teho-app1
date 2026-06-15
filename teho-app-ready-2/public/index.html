@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сеть корейских кафе ТЭХО | Ростов-на-Дону</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ГЛОБАЛЬНАЯ НАВИГАЦИЯ -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo" onclick="Router.navigate('home')">ТЭХО<span>태호</span></div>
+            <nav class="nav-links">
+                <a href="javascript:void(0)" onclick="Router.navigate('home')" class="nav-item" id="nav-home">Меню</a>
+                <a href="javascript:void(0)" onclick="Router.navigate('constructor')" class="nav-item" id="nav-constructor">WOK-Конструктор</a>
+                <a href="javascript:void(0)" onclick="Router.navigate('booking')" class="nav-item" id="nav-booking">Бронь столов</a>
+                <a href="javascript:void(0)" onclick="Router.navigate('reviews')" class="nav-item" id="nav-reviews">Отзывы</a>
+                <a href="javascript:void(0)" onclick="Router.navigate('career')" class="nav-item" id="nav-career">Вакансии</a>
+                <a href="javascript:void(0)" onclick="Router.navigate('cart')" class="nav-item" id="nav-cart">Корзина (<span id="cart-counter">0</span>)</a>
+                <a href="javascript:void(0)" onclick="Router.navigate('profile')" class="nav-item" id="nav-profile-link">Войти</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ЕДИНАЯ ТОЧКА МОНТИРОВАНИЯ SPA -->
+    <main id="app">
+
+        <!-- СТРАНИЦА 1: ГЛАВНАЯ / МЕНЮ -->
+        <section id="view-home" class="view">
+            <div class="hero-section">
+                <h1>Аутентичная корейская кухня в Ростове</h1>
+                <p>Пряные вкусы Сеула в минималистичном прочтении</p>
+            </div>
+            <div class="catalog-control">
+                <input type="text" id="menu-search" placeholder="Поиск блюда..." onkeyup="Menu.handleSearch(this.value)">
+                <div class="filter-bar" id="category-filters"></div>
+            </div>
+            <div class="products-grid" id="menu-grid"></div>
+        </section>
+
+        <!-- СТРАНИЦА 2: WOK-КОНСТРУКТОР -->
+        <section id="view-constructor" class="view hidden">
+            <div class="section-title"><h2>Конструктор WOK</h2><p>Соберите своё идеальное азиатское блюдо</p></div>
+            <div class="constructor-container">
+                <div class="constructor-options">
+                    <div class="option-group"><h3>1. Выберите основу</h3><div class="tiles-wrapper" id="constructor-base"></div></div>
+                    <div class="option-group"><h3>2. Выберите соус</h3><div class="tiles-wrapper" id="constructor-sauce"></div></div>
+                    <div class="option-group"><h3>3. Добавьте топпинги</h3><div class="tiles-wrapper" id="constructor-toppings"></div></div>
+                </div>
+                <div class="constructor-preview">
+                    <div class="preview-card">
+                        <h3>Ваш кастомный WOK</h3>
+                        <div id="constructor-summary">Выберите параметры сборки...</div>
+                        <div class="preview-price">Итого: <span id="constructor-total-price">0</span> ₽</div>
+                        <button class="btn-primary" style="width: 100%; margin-top: 15px;" onclick="Constructor.addToCart()">В корзину</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СТРАНИЦА 3: ИНТЕРАКТИВНОЕ БРОНИРОВАНИЕ СТОЛОВ -->
+        <section id="view-booking" class="view hidden">
+            <div class="section-title"><h2>Бронирование столов онлайн</h2><p>Выберите свободный стол на интерактивной схеме зала</p></div>
+            <div class="booking-wrapper">
+                <div class="restaurant-map">
+                    <div class="map-screen">КОНТАКТНАЯ БАРНАЯ ЗОНА / КУХНЯ</div>
+                    <div class="tables-grid" id="restaurant-tables-grid"></div>
+                </div>
+                <div class="booking-form-panel">
+                    <div class="checkout-card">
+                        <h3>Детали визита</h3>
+                        <div id="selected-table-info" style="margin-bottom: 15px; font-weight: 600; color: var(--accent);">Стол не выбран</div>
+                        <div class="form-group"><label>Дата визита</label><input type="date" id="book-date" required></div>
+                        <div class="form-group"><label>Время</label><input type="time" id="book-time" required></div>
+                        <div class="form-group"><label>Количество гостей</label><input type="number" id="book-guests" min="1" max="6" value="2"></div>
+                        <button class="btn-success" onclick="BookingEngine.submitBooking()">Зарезервировать стол</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СТРАНИЦА 4: КНИГА ОТЗЫВОВ -->
+        <section id="view-reviews" class="view hidden">
+            <div class="section-title"><h2>Отзывы гостей</h2></div>
+            <div class="reviews-layout">
+                <div class="reviews-list" id="reviews-container"></div>
+                <div class="review-form-box">
+                    <h3>Оставить отзыв</h3>
+                    <form onsubmit="ReviewsModule.addReview(event)">
+                        <div class="form-group"><label>Имя</label><input type="text" id="rev-name" required></div>
+                        <div class="form-group"><label>Оценка</label>
+                            <select id="rev-rating"><option value="5">5 звезд — Идеально</option><option value="4">4 звезды — Хорошо</option><option value="3">3 звезды — Нормально</option></select>
+                        </div>
+                        <div class="form-group"><label>Комментарий</label><textarea id="rev-text" rows="4" required></textarea></div>
+                        <button type="submit" class="btn-primary">Отправить на модерацию</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- СТРАНИЦА 5: ЛИЧНЫЙ КАБИНЕТ И ЛОЯЛЬНОСТЬ -->
+        <section id="view-profile" class="view hidden">
+            <div id="profile-auth-block">
+                <div class="login-card">
+                    <h2>Личный кабинет</h2>
+                    <div class="form-group"><label>Номер телефона</label><input type="tel" id="user-auth-phone" placeholder="+7 999 000-00-00"></div>
+                    <div class="form-group"><label>Пароль</label><input type="password" id="user-auth-password" placeholder="Минимум 4 символа"></div>
+                    <button class="btn-primary" style="width:100%; margin-bottom:10px;" onclick="UserProfile.login()">Войти</button>
+                    <button class="btn-outline" style="width:100%;" onclick="UserProfile.register()">Зарегистрироваться</button>
+                    <p id="user-auth-error" class="error-text hidden"></p>
+                    <p style="font-size:11px; color:var(--text-muted); margin-top:15px;">Нет аккаунта? Введите телефон и пароль и нажмите «Зарегистрироваться» — при регистрации начисляется 100 приветственных бонусов.</p>
+                </div>
+            </div>
+            <div id="profile-dashboard-block" class="hidden">
+                <div class="admin-header-box" style="margin-bottom:20px;"><h2>Мой кабинет</h2><button class="btn-danger" onclick="UserProfile.logout()">Выйти</button></div>
+                <div class="profile-grid">
+                    <div class="checkout-card card-loyalty">
+                        <h3>Карта лояльности ТЭХО</h3>
+                        <p class="user-phone-display" id="user-display-phone">+7 (999) 000-00-00</p>
+                        <div class="bonus-balance"><span id="user-display-bonuses">0</span> <span>Б</span></div>
+                        <p style="font-size: 11px; color: var(--text-muted);">1 бонус = 1 рубль. Оплачивайте до 50% стоимости заказа.</p>
+                    </div>
+                    <div class="checkout-card">
+                        <h3>История ваших заказов</h3>
+                        <div id="user-orders-history" class="history-list"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СТРАНИЦА 6: КОРЗИНА И ОФОРМЛЕНИЕ -->
+        <section id="view-cart" class="view hidden">
+            <div class="section-title"><h2>Ваш заказ</h2></div>
+            <div class="cart-container">
+                <div class="cart-items-list" id="cart-items-container"></div>
+                <div class="cart-checkout-panel">
+                    <div class="checkout-card">
+                        <h3>Оформление</h3>
+                        <form id="checkout-form" onsubmit="Cart.handleCheckout(event)">
+                            <div class="form-group"><label>Ваше имя</label><input type="text" required id="order-name"></div>
+                            <div class="form-group"><label>Телефон</label><input type="tel" required id="order-phone"></div>
+                            <div class="form-group"><label>Получение</label>
+                                <select id="order-delivery-type" onchange="Cart.toggleDeliveryFields(this.value)">
+                                    <option value="delivery">Курьерская доставка по городу</option>
+                                    <option value="pickup">Самовывоз (-10% скидка)</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="delivery-zone-group">
+                                <label>Район Ростова-на-Дону</label>
+                                <select id="order-zone" onchange="Cart.recalculateTotal()">
+                                    <option value="center">Центр / Нахичевань (0 ₽)</option>
+                                    <option value="sleeping">ЗЖМ / СЖМ / Александровка (150 ₽)</option>
+                                    <option value="remote">Батайск / Аксай / Левенцовка (300 ₽)</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="delivery-address-group"><label>Адрес доставки</label><input type="text" id="order-address" required></div>
+                            <div class="form-group" id="bonus-burn-container"></div>
+                            <div class="promo-group"><input type="text" id="promo-input" placeholder="Промокод"><button type="button" onclick="Cart.applyPromo()">OK</button></div>
+                            <div class="price-breakdown">
+                                <p>Блюда: <span id="summary-items-price">0</span> ₽</p>
+                                <p>Доставка: <span id="summary-delivery-price">0</span> ₽</p>
+                                <p id="summary-discount-row" class="hidden">Скидка: -<span id="summary-discount-value">0</span> ₽</p>
+                                <p id="summary-bonus-row" class="hidden">Списано бонусов: -<span id="summary-bonus-value">0</span> ₽</p>
+                                <hr>
+                                <h4>К оплате: <span id="summary-total-price">0</span> ₽</h4>
+                            </div>
+                            <button type="submit" class="btn-success">Отправить заказ</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- СТРАНИЦА 7: КАРЬЕРА / ВАКАНСИИ -->
+        <section id="view-career" class="view hidden">
+            <div class="section-title"><h2>Работа в ТЭХО</h2><p>Присоединяйся к команде профессионалов</p></div>
+            <div class="career-grid" id="vacancies-container"></div>
+        </section>
+
+        <!-- СТРАНИЦА 8: ВХОД В АДМИНКУ -->
+        <section id="view-admin-login" class="view hidden">
+            <div class="login-card">
+                <h2>Вход в бэк-офис</h2>
+                <form onsubmit="Admin.login(event)">
+                    <div class="form-group"><label>Логин</label><input type="text" id="login-username" required></div>
+                    <div class="form-group"><label>Пароль</label><input type="password" id="login-password" required></div>
+                    <button type="submit" class="btn-primary">Войти</button>
+                    <p id="login-error" class="error-text hidden">Неверный логин или пароль!</p>
+                </form>
+            </div>
+        </section>
+
+        <!-- СТРАНИЦА 9: ПАНЕЛЬ АДМИНИСТРАТОРА -->
+        <section id="view-admin-dashboard" class="view hidden">
+            <div class="admin-header-box"><h2>Диспетчерская бэк-офиса</h2><button class="btn-danger" onclick="Admin.logout()">Выйти</button></div>
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="Admin.switchTab('orders', event)">Заказы</button>
+                <button class="tab-btn" onclick="Admin.switchTab('tables', event)">Столы</button>
+                <button class="tab-btn" onclick="Admin.switchTab('prices', event)">Цены</button>
+                <button class="tab-btn" onclick="Admin.switchTab('reviews', event)">Модерация</button>
+                <button class="tab-btn" onclick="Admin.switchTab('applications', event)">Анкеты</button>
+            </div>
+            <div id="admin-tab-orders" class="admin-tab-content">
+                <table class="admin-table">
+                    <thead><tr><th>ID</th><th>Клиент</th><th>Состав</th><th>Итог</th><th>Курьер</th><th>Статус</th></tr></thead>
+                    <tbody id="admin-orders-table"></tbody>
+                </table>
+            </div>
+            <div id="admin-tab-tables" class="admin-tab-content hidden"><div class="tables-dashboard-grid" id="admin-tables-list"></div></div>
+            <div id="admin-tab-prices" class="admin-tab-content hidden"><div class="admin-menu-manager" id="admin-menu-list"></div></div>
+            <div id="admin-tab-reviews" class="admin-tab-content hidden"><div class="admin-reviews-manager" id="admin-reviews-list"></div></div>
+            <div id="admin-tab-applications" class="admin-tab-content hidden"><div id="admin-applications-list"></div></div>
+        </section>
+
+    </main>
+
+    <!-- ФУТЕР -->
+    <footer class="main-footer">
+        <div class="footer-grid">
+            <div class="footer-col"><h3>ТЭХО</h3><p>Концептуальное кафе корейской кухни.</p></div>
+            <div class="footer-col">
+                <h4>Разделы</h4>
+                <ul style="list-style:none; padding:0; margin:0;">
+                    <li><a href="javascript:void(0)" onclick="Router.navigate('booking')">Забронировать стол</a></li>
+                    <li><a href="javascript:void(0)" onclick="Router.navigate('reviews')">Книга отзывов</a></li>
+                    <li><a href="javascript:void(0)" onclick="Router.navigate('career')">Вакансии</a></li>
+                </ul>
+            </div>
+            <div class="footer-col"><h4>Ростов-на-Дону</h4><p>ул. Большая Садовая, 100</p></div>
+        </div>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО: АНКЕТА ОТКЛИКА НА ВАКАНСИЮ -->
+    <div id="application-modal" class="modal-overlay hidden">
+        <div class="modal-window">
+            <div class="modal-head">
+                <h3>Анкета соискателя</h3>
+                <button class="modal-close" onclick="CareerModule.closeForm()">&times;</button>
+            </div>
+            <p style="font-size:13px; color:var(--text-muted); margin-top:0;">Вакансия: <strong id="application-vacancy-title" style="color:var(--accent);"></strong></p>
+            <form onsubmit="CareerModule.submitForm(event)">
+                <div class="form-group"><label>ФИО *</label><input type="text" id="app-name" required></div>
+                <div class="form-group"><label>Телефон для связи *</label><input type="tel" id="app-phone" required></div>
+                <div class="form-group"><label>Возраст</label><input type="number" id="app-age" min="14" max="80"></div>
+                <div class="form-group"><label>Опыт работы</label><input type="text" id="app-experience" placeholder="Например: 2 года поваром"></div>
+                <div class="form-group"><label>Сопроводительное сообщение</label><textarea id="app-message" rows="3" placeholder="Пару слов о себе"></textarea></div>
+                <button type="submit" class="btn-success">Отправить анкету</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

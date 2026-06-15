@@ -1,0 +1,140 @@
+:root {
+    --bg-main: #0B0B0B;
+    --bg-surface: #141414;
+    --bg-card: #1E1E1E;
+    --accent: #FF4D00;
+    --accent-hover: #D63F00;
+    --text-primary: #FAF8F5;
+    --text-muted: #8E8E93;
+    --success: #24C765;
+    --danger: #FF3B30;
+    --border-radius: 12px;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+#app { flex: 1 0 auto; }
+.main-header {
+    background: rgba(20, 20, 20, 0.85);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid #222;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+.logo { font-size: 22px; font-weight: 800; letter-spacing: 2px; cursor: pointer; }
+.logo span { color: var(--accent); font-size: 12px; margin-left: 5px; }
+.nav-links { display: flex; align-items: center; }
+.nav-links a { color: var(--text-primary); text-decoration: none; margin-left: 20px; font-weight: 600; font-size: 13px; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--accent); }
+.admin-badge { border: 1px solid var(--accent); padding: 4px 10px; border-radius: 20px; }
+
+.view { max-width: 1200px; margin: 0 auto; padding: 40px 20px; animation: fadeIn 0.3s ease; }
+.hidden { display: none !important; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* КОНСТРУКТОР ТАЙЛЫ */
+.constructor-container { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; margin-top: 20px; }
+.tiles-wrapper { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.tile-label { background: var(--bg-surface); border: 1px solid #333; padding: 12px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 13px; }
+.tile-label input { accent-color: var(--accent); }
+
+/* ФОРМЫ И КАРТОЧКИ */
+.form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+.form-group label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
+.form-group input, .form-group select, .form-group textarea { background: var(--bg-card); border: 1px solid #333; padding: 10px; color: white; border-radius: 6px; font-family: inherit; }
+.checkout-card { background: var(--bg-surface); border: 1px solid #222; padding: 25px; border-radius: var(--border-radius); }
+.preview-price { font-size: 20px; font-weight: 800; margin-top: 15px; text-align: right; }
+
+/* КАТАЛОГ МЕНЮ */
+.hero-section { text-align: center; margin-bottom: 40px; }
+.catalog-control { display: flex; justify-content: space-between; margin-bottom: 30px; gap: 20px; }
+.catalog-control input { background: var(--bg-surface); border: 1px solid #333; padding: 12px; color: white; border-radius: 8px; width: 300px; }
+.filter-bar button { background: var(--bg-surface); border: 1px solid #333; color: white; padding: 8px 16px; border-radius: 20px; margin-left: 8px; cursor: pointer; font-weight: 600; }
+.filter-bar button.active { background: var(--accent); border-color: var(--accent); }
+
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+.product-card { background: var(--bg-surface); border-radius: var(--border-radius); overflow: hidden; border: 1px solid #222; }
+.product-img { width: 100%; height: 180px; object-fit: cover; }
+.product-info { padding: 20px; }
+.product-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; }
+.price { font-size: 18px; font-weight: 800; }
+
+/* КНОПКИ */
+.btn-primary { background: var(--accent); color: white; border:none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+.btn-success { background: var(--success); color: white; border:none; padding: 12px; border-radius: 6px; font-weight: 600; width: 100%; cursor: pointer; }
+.btn-danger { background: var(--danger); color: white; border:none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+
+/* ИНТЕРАКТИВНАЯ КАРТА СТОЛОВ */
+.booking-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+.restaurant-map { background: var(--bg-surface); border: 1px solid #333; padding: 30px; border-radius: var(--border-radius); text-align: center; }
+.map-screen { background: #222; padding: 10px; margin-bottom: 40px; border-radius: 4px; font-size: 12px; letter-spacing: 2px; color: var(--text-muted); }
+.tables-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.table-unit { background: var(--bg-card); border: 2px solid #444; padding: 25px 10px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+.table-unit.available:hover { border-color: var(--accent); background: rgba(255, 77, 0, 0.05); }
+.table-unit.selected { border-color: var(--accent); background: var(--accent); color: white; }
+.table-unit.occupied { background: #2A1616; border-color: #552222; color: var(--text-muted); cursor: not-allowed; }
+
+/* КОРЗИНА И ОТЗЫВЫ */
+.cart-container, .reviews-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+.review-card { background: var(--bg-surface); padding: 20px; border-radius: var(--border-radius); margin-bottom: 15px; border: 1px solid #222; }
+.review-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.rating-stars { color: #FFCC00; font-weight: 800; }
+.promo-group { display: flex; gap: 10px; margin: 15px 0; }
+.promo-group input { flex-grow: 1; }
+.price-breakdown p { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin: 5px 0; }
+
+/* АДМИН-ПАНЕЛЬ */
+.admin-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+.tab-btn { background: none; border: none; color: var(--text-muted); font-size: 14px; font-weight: 600; padding: 8px 16px; cursor: pointer; }
+.tab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+.admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+.admin-table th, .admin-table td { padding: 12px; border-bottom: 1px solid #333; }
+.tables-dashboard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+.admin-menu-item { display: flex; justify-content: space-between; padding: 10px; background: var(--bg-surface); margin-bottom: 5px; border-radius: 6px; align-items: center; }
+
+.main-footer { background: #050505; border-top: 1px solid #202020; padding: 40px 20px; margin-top: 0; flex-shrink: 0; font-size: 13px; color: var(--text-muted); }
+.footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.footer-col a { color: var(--text-muted); text-decoration: none; }
+.footer-col a:hover { color: var(--accent); }
+
+/* КНОПКА-КОНТУР И ОШИБКИ */
+.btn-outline { background: transparent; color: var(--text-primary); border: 1px solid #444; padding: 10px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.error-text { color: var(--danger); font-size: 13px; margin-top: 10px; }
+
+/* СТАТУСЫ СТОЛОВ В АДМИНКЕ */
+.status-free { color: var(--success); }
+.status-busy { color: var(--danger); }
+
+/* МОДАЛЬНОЕ ОКНО (АНКЕТА) */
+.modal-overlay {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2000; padding: 20px;
+}
+.modal-window {
+    background: var(--bg-surface); border: 1px solid #333;
+    border-radius: var(--border-radius); padding: 25px;
+    width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto;
+    animation: fadeIn 0.2s ease;
+}
+.modal-head { display: flex; justify-content: space-between; align-items: center; }
+.modal-head h3 { margin: 0; }
+.modal-close { background: none; border: none; color: var(--text-muted); font-size: 28px; line-height: 1; cursor: pointer; }
+.modal-close:hover { color: var(--accent); }
